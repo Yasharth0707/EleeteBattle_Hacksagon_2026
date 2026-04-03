@@ -1,25 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-const { PORT } = require('./config/env');
+const { PORT } = require('./src/config/env');
+const connectDB = require('./src/config/db'); // import
 
-
-// here we have Initialized the Express app
 const app = express();
 
+app.use(cors());
+app.use(express.json());
 
-// here we attach essential Middlewares
-app.use(cors()); 
+connectDB(); //   connection call
 
-
-app.use(express.json()); 
-
-
-//Setup a basic health-check route to verify it works
 app.get('/', (req, res) => {
   res.send('EleeteBattle API is up and running!');
 });
 
-// Start listening for incoming requests
 app.listen(PORT, () => {
-    console.log(`Server is running on port: ${PORT}`);
+  console.log(`Server is running on port: ${PORT}`);
 });

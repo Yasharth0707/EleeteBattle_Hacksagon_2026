@@ -52,7 +52,7 @@ router.get('/me', (req, res) => {
 
   const token = authHeader.split(' ')[1];
   jwt.verify(token, JWT_SECRET, async (err, decoded) => {
-    if (err) return res.status(400).json({ error: 'Invalid token' });
+    if (err) return res.status(401).json({ error: 'Invalid token' });
     try {
       const user = await User.findById(decoded.id).select('_id username rating wins losses ratingHistory matchHistory');
       if (!user) return res.status(404).json({ error: 'User not found' });

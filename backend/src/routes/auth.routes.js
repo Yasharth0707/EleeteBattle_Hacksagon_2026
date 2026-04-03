@@ -26,4 +26,22 @@ router.post('/register', async (req, res) => {
   }
 });
 
+
+// POST /api/login
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) return res.status(400).json({ error: 'Invalid username or password.' });
+
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) return res.status(400).json({ error: 'Invalid username or password.' });
+
+    const token = jwt.sign({ id: user._id, username: user.username, rating: user.rating }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token, user: { id: user._id, username: user.username, rating: user.rating, wins: user.wins, losses: user.losses } });
+  } catch (err) {
+    res.status(500).json({ error: 'Database error.' });
+  }
+});
+
 module.exports = router;

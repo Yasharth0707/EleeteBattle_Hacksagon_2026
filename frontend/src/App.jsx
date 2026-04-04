@@ -8,14 +8,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 // === COMMENTED OUT UNTIL BUILT (Phases 6/7/8) ===
-// import Landing from './pages/Landing';
+import Landing from './pages/Landing';
 // import Invite from './pages/Invite';
 // import Join from './pages/Join';
 // import Room from './pages/Room';
 // import Battle from './pages/Battle';
 // import Matchmaking from './pages/Matchmaking';
-// import Profile from './pages/Profile';
-// import Leaderboard from './pages/Leaderboard';
+import Profile from './pages/Profile';
+import Leaderboard from './pages/Leaderboard';
 
 export default function App() {
   return (

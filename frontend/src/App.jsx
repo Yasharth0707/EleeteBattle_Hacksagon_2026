@@ -12,7 +12,7 @@ import Landing from './pages/Landing';
 // import Invite from './pages/Invite';
 // import Join from './pages/Join';
 // import Room from './pages/Room';
-// import Battle from './pages/Battle';
+ import Battle from './pages/Battle';
  import Matchmaking from './pages/Matchmaking';
 import Profile from './pages/Profile';
 import Leaderboard from './pages/Leaderboard';
@@ -31,9 +31,9 @@ export default function App() {
             {/* <Route path="/invite" element={<Invite />} /> */}
             {/* <Route path="/join" element={<Join />} /> */}
             {/* <Route path="/room" element={<Room />} /> */}
-            {/* <Route path="/battle" element={<Battle />} /> */}
+            { <Route path="/battle" element={<Battle />} /> }
             { <Route path="/matchmaking" element={<Matchmaking />} /> }
-            {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
+            { <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> }
             {/* <Route path="/leaderboard" element={<Leaderboard />} /> */}
           </Routes>
         </BrowserRouter>

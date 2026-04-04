@@ -11,7 +11,7 @@ import Register from './pages/Register';
 import Landing from './pages/Landing';
 // import Invite from './pages/Invite';
 // import Join from './pages/Join';
-// import Room from './pages/Room';
+ import Room from './pages/Room';
  import Battle from './pages/Battle';
  import Matchmaking from './pages/Matchmaking';
 import Profile from './pages/Profile';
@@ -30,7 +30,7 @@ export default function App() {
             { <Route path="/" element={<Landing />} /> }
             {/* <Route path="/invite" element={<Invite />} /> */}
             {/* <Route path="/join" element={<Join />} /> */}
-            {/* <Route path="/room" element={<Room />} /> */}
+            { <Route path="/room" element={<Room />} /> }
             { <Route path="/battle" element={<Battle />} /> }
             { <Route path="/matchmaking" element={<Matchmaking />} /> }
             { <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> }

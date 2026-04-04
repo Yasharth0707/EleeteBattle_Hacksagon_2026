@@ -6,9 +6,10 @@ export default function Navbar() {
 
   return (
     <nav className="flex items-center justify-between px-8 h-14 border-b border-border bg-bg/90 backdrop-blur-md sticky top-0 z-[100]">
-      <Link to="/" className="font-display text-lg font-bold tracking-tight text-ember no-underline hover:text-ember-glow transition-colors">
-        EleeteBattle
-      </Link>
+<Link to="/" className="flex items-center gap-2 no-underline hover:opacity-80 transition-opacity">
+  <img src="/logo.png" alt="EleeteBattle Logo" className="h-12 w-auto object-contain scale-[1.5] origin-left" />
+</Link>
+
 
       <div className="flex items-center gap-1">
         <Link to="/join" className="text-muted text-sm font-medium px-3 py-1.5 rounded-md transition-all duration-200 hover:text-text hover:bg-surface2 no-underline">

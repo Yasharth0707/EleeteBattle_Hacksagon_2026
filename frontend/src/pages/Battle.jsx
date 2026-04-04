@@ -263,9 +263,7 @@ export default function Battle() {
       {/* Top Bar */}
       <div className="h-11 bg-surface border-b border-border flex items-center justify-between px-4 flex-shrink-0 z-10">
         <div className="flex items-center gap-3">
-          <span className="font-display text-sm font-bold tracking-tight text-ember">
-            EleeteBattle
-          </span>
+  <img src="/logo.png" alt="EleeteBattle Logo" className="h-6 w-auto object-contain" />
           <div className="w-px h-4 bg-border" />
           <span className="text-xs font-medium text-muted font-mono">Room {roomCode}</span>
         </div>

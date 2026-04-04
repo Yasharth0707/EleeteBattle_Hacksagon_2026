@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ParticleBackground from '../components/ParticleBackground';
+import TextType from "../components/TextType";
+
 
 const arenas = [
   { name: 'Bronze', req: '0 – 1399', color: 'bg-[#cd7f32]' },
@@ -23,11 +25,49 @@ export default function Landing() {
             <div className="w-1.5 h-1.5 bg-mint rounded-full animate-blink" />
             Real-time 1v1 Battles
           </div>
-          <h1 className="font-display text-[clamp(2.2rem,5vw,4rem)] font-bold tracking-tight leading-[1.1] mb-4">
-            <span className="text-text">Code. </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-ember to-gold">Battle. </span>
-            <span className="text-text">Win.</span>
-          </h1>
+<h1 className="font-display text-[clamp(2.2rem,5vw,4rem)] font-bold tracking-tight leading-[1.1] mb-4 flex justify-center gap-3">
+  
+<span className="text-text">
+  <TextType 
+    text="Code."
+    typingSpeed={120}
+    initialDelay={0}
+    showCursor={false}
+    loop={true}
+    pauseDuration={6000}
+    deletingSpeed={80}
+  />
+</span>
+
+<span className="text-transparent bg-clip-text bg-gradient-to-r from-ember to-gold">
+  <TextType 
+    text="Battle."
+    typingSpeed={120}
+    initialDelay={700}
+    showCursor={false}
+    loop={true}
+    pauseDuration={6000}
+    deletingSpeed={80}
+  />
+</span>
+
+<span className="text-text">
+  <TextType 
+    text="Win."
+    typingSpeed={120}
+    initialDelay={1600}
+    showCursor={false}
+    loop={true}
+    pauseDuration={6000}
+    deletingSpeed={80}
+  />
+</span>
+
+
+</h1>
+
+
+
           <p className="text-text2 text-lg max-w-[480px] mx-auto leading-relaxed">
             The competitive LeetCode arena. Challenge friends or find opponents — first accepted solution wins.
           </p>

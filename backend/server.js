@@ -13,6 +13,7 @@ const authRoutes = require('./src/routes/auth.routes');
 const problemRoutes = require('./src/routes/problem.routes');
 const leaderboardRoutes = require('./src/routes/leaderboard.routes');
 const executionRoutes = require('./src/routes/execution.routes');
+const { router: roomRoutes, setRooms } = require('./src/routes/room.routes');
 
 // ─── Initialize ──────────────────────────────────────────────────────────────
 const app = express();
@@ -21,6 +22,7 @@ const io = new Server(server, { cors: { origin: '*' } });
 
 // ─── Shared in-memory state ──────────────────────────────────────────────────
 const rooms = {};
+setRooms(rooms);
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(cors());
@@ -31,6 +33,7 @@ app.use('/api', authRoutes);
 app.use('/api', problemRoutes);
 app.use('/api', leaderboardRoutes);
 app.use('/api', executionRoutes);
+app.use('/', roomRoutes);
 
 // ─── Socket.io ───────────────────────────────────────────────────────────────
 initializeSocket(io, rooms);

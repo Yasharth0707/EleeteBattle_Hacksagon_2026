@@ -74,7 +74,7 @@ export default function Matchmaking() {
       <ParticleBackground />
       <Navbar />
       <main className="flex-1 flex items-center justify-center p-8 relative z-[1]">
-        <div className="bg-surface border border-border rounded-lg p-8 w-full max-w-[460px] animate-cardEntry">
+        <div className="bg-surface/70 backdrop-blur-xl shadow-glass-inset border border-white/5 shadow-2xl rounded-lg p-8 w-full max-w-[460px] animate-cardEntry">
           
           {/* Match Found Animation */}
           {matchFound && (
@@ -164,12 +164,12 @@ export default function Matchmaking() {
                 <div className="mb-5">
                   <label className="block text-xs font-medium text-text2 mb-1.5">LeetCode URL</label>
                   <input type="url" value={problemUrl} onChange={e => setProblemUrl(e.target.value)} placeholder="https://leetcode.com/problems/two-sum/"
-                    className="w-full bg-surface2 border border-border rounded-md text-text text-sm p-2.5 transition-all outline-none focus:border-ember/50 focus:ring-1 focus:ring-ember/20 placeholder:text-muted" />
+                    className="w-full bg-surface/50 border border-border rounded-md text-text text-sm p-2.5 transition-all outline-none focus:border-ember/50 focus:ring-2 focus:ring-ember/20 focus:bg-surface2 placeholder:text-muted" />
                 </div>
               )}
 
               <button onClick={startSearch}
-                className="w-full py-2.5 px-6 bg-ember hover:bg-ember-glow text-white font-semibold rounded-md border-none cursor-pointer shadow-[0_4px_16px_rgba(255,107,53,0.2)] hover:translate-y-[-1px] transition-all duration-200 text-sm">
+                className="w-full py-2.5 px-6 bg-ember hover:bg-ember-glow text-white font-semibold rounded-md border-none cursor-pointer shadow-glow-ember hover:translate-y-[-1px] transition-all duration-300 text-sm hover:shadow-[0_4px_24px_rgba(255,107,53,0.5)]">
                 ⚔️ Find Opponent
               </button>
             </>

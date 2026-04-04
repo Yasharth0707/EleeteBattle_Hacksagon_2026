@@ -56,7 +56,7 @@ export default function Profile() {
         <div className="max-w-[1000px] mx-auto mt-10 px-6 flex gap-6 animate-cardEntry max-[768px]:flex-col">
           {/* Sidebar */}
           <div className="w-[280px] max-[768px]:w-full">
-            <div className="bg-surface border border-border rounded-lg p-7 text-center relative overflow-hidden">
+            <div className="bg-surface/70 backdrop-blur-xl shadow-glass-inset border border-white/5 shadow-2xl rounded-lg p-7 text-center relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ember via-gold to-ember/20" />
               
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-ember/20 to-ember/5 border-2 border-ember/40 mx-auto flex items-center justify-center text-2xl mb-3">
@@ -93,7 +93,7 @@ export default function Profile() {
           <div className="flex-1">
             {/* Rating Chart */}
             {(user.ratingHistory || []).length > 1 && (
-              <div className="bg-surface border border-border rounded-lg p-5 mb-5 relative overflow-hidden">
+              <div className="bg-surface/70 backdrop-blur-xl shadow-glass-inset border border-white/5 shadow-2xl rounded-lg p-5 mb-5 relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ember/40 to-transparent" />
                 <h2 className="text-xs font-medium uppercase tracking-wider text-muted mb-3">Rating History</h2>
                 <div className="h-48">
@@ -103,7 +103,7 @@ export default function Profile() {
             )}
 
             {/* Match History */}
-            <div className="bg-surface border border-border rounded-lg p-5 relative overflow-hidden">
+            <div className="bg-surface/70 backdrop-blur-xl shadow-glass-inset border border-white/5 shadow-2xl rounded-lg p-5 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ember/40 to-transparent" />
               <h2 className="text-xs font-medium uppercase tracking-wider text-muted mb-3">Match History</h2>
               {(!user.matchHistory || user.matchHistory.length === 0) ? (

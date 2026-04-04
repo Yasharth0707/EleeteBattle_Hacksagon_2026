@@ -39,7 +39,7 @@ export default function Invite() {
       <ParticleBackground />
       <Navbar />
       <main className="flex-1 flex items-center justify-center p-8 relative z-[1]">
-        <div className="bg-surface border border-border rounded-lg p-8 w-full max-w-[460px] animate-cardEntry">
+        <div className="bg-surface/70 backdrop-blur-xl shadow-glass-inset border border-white/5 shadow-2xl rounded-lg p-8 w-full max-w-[460px] animate-cardEntry">
           <div className="inline-flex items-center gap-2 bg-ember/[0.08] border border-ember/[0.12] rounded-full px-3 py-1 text-xs font-semibold text-ember mb-5 tracking-wide">
             <div className="w-1.5 h-1.5 bg-mint rounded-full animate-blink" />
             Private Battle
@@ -53,17 +53,17 @@ export default function Invite() {
             <div className="mb-4">
               <label className="block text-xs font-medium text-text2 mb-1.5">Problem URL</label>
               <input type="url" value={problemUrl} onChange={e => setProblemUrl(e.target.value)} placeholder="https://leetcode.com/problems/two-sum/" required
-                className="w-full bg-surface2 border border-border rounded-md text-text text-sm p-2.5 transition-all duration-200 outline-none focus:border-ember/50 focus:ring-1 focus:ring-ember/20 placeholder:text-muted" />
+                className="w-full bg-surface/50 border border-border rounded-md text-text text-sm p-2.5 transition-all duration-200 outline-none focus:border-ember/50 focus:ring-2 focus:ring-ember/20 focus:bg-surface2 placeholder:text-muted" />
             </div>
             <div className="mb-5">
               <label className="block text-xs font-medium text-text2 mb-1.5">
                 Display Name <span className="text-muted font-normal">(optional)</span>
               </label>
               <input type="text" value={playerName} onChange={e => setPlayerName(e.target.value)} placeholder="Your nickname" maxLength={20}
-                className="w-full bg-surface2 border border-border rounded-md text-text text-sm p-2.5 transition-all duration-200 outline-none focus:border-ember/50 focus:ring-1 focus:ring-ember/20 placeholder:text-muted" />
+                className="w-full bg-surface/50 border border-border rounded-md text-text text-sm p-2.5 transition-all duration-200 outline-none focus:border-ember/50 focus:ring-2 focus:ring-ember/20 focus:bg-surface2 placeholder:text-muted" />
             </div>
             <button type="submit" disabled={loading}
-              className="w-full py-2.5 px-6 bg-ember hover:bg-ember-glow text-white font-semibold rounded-md border-none cursor-pointer shadow-[0_4px_16px_rgba(255,107,53,0.2)] hover:shadow-[0_6px_24px_rgba(255,107,53,0.25)] transition-all duration-200 hover:translate-y-[-1px] disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 text-sm">
+              className="w-full py-2.5 px-6 bg-ember hover:bg-ember-glow text-white font-semibold rounded-md border-none cursor-pointer shadow-glow-ember hover:shadow-[0_6px_24px_rgba(255,107,53,0.5)] transition-all duration-300 hover:translate-y-[-1px] disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 text-sm">
               {loading ? <><span className="inline-block w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2 align-middle" /> Creating room...</> : 'Create Battle Room'}
             </button>
             {error && <div className="bg-flame/[0.08] border border-flame/20 rounded-md text-flame p-2.5 text-sm mt-3 font-medium animate-shake">{error}</div>}

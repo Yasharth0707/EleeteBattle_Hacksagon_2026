@@ -20,7 +20,7 @@ export default function Landing() {
       <Navbar />
       <main className="flex-1 flex flex-col items-center justify-center p-8 relative z-[1] min-h-[calc(100vh-56px)]">
         {/* Hero */}
-        <div className="text-center mb-14 animate-cardEntry">
+        <div className="text-center mb-14 animate-floatSlow">
           <div className="inline-flex items-center gap-2 bg-ember/[0.08] border border-ember/[0.15] rounded-full px-4 py-1.5 text-xs font-semibold text-ember mb-6 tracking-wide">
             <div className="w-1.5 h-1.5 bg-mint rounded-full animate-blink" />
             Real-time 1v1 Battles
@@ -75,8 +75,8 @@ export default function Landing() {
 
         {/* Mode Cards */}
         <div className="grid grid-cols-2 gap-5 max-w-[680px] w-full animate-[cardEntry_0.5s_cubic-bezier(0.22,1,0.36,1)_0.1s_both] max-[768px]:grid-cols-1 max-[768px]:max-w-[380px]">
-          <Link to="/invite" className="group bg-surface border border-border rounded-lg p-7 cursor-pointer transition-all duration-300 relative overflow-hidden no-underline block hover:translate-y-[-4px] hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] hover:border-ember/30">
-            <div className="absolute top-0 left-0 w-1 h-full bg-ember rounded-r-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <Link to="/invite" className="group bg-surface/70 backdrop-blur-md shadow-lg border border-border rounded-lg p-7 cursor-pointer transition-all duration-300 relative overflow-hidden no-underline block hover:translate-y-[-4px] hover:shadow-glow-ember hover:border-ember/40">
+            <div className="absolute top-0 left-0 w-1 h-full bg-ember rounded-r-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_10px_#ff6b35]" />
             <span className="text-[2rem] mb-3 block">🎯</span>
             <div className="font-display text-base font-bold tracking-tight text-text mb-1.5">Challenge Friend</div>
             <div className="text-muted text-sm leading-relaxed mb-4">
@@ -88,8 +88,8 @@ export default function Landing() {
             </div>
           </Link>
 
-          <Link to="/matchmaking" className="group bg-surface border border-border rounded-lg p-7 cursor-pointer transition-all duration-300 relative overflow-hidden no-underline block hover:translate-y-[-4px] hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] hover:border-violet/30">
-            <div className="absolute top-0 left-0 w-1 h-full bg-violet rounded-r-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <Link to="/matchmaking" className="group bg-surface/70 backdrop-blur-md shadow-lg border border-border rounded-lg p-7 cursor-pointer transition-all duration-300 relative overflow-hidden no-underline block hover:translate-y-[-4px] hover:shadow-glow-violet hover:border-violet/40">
+            <div className="absolute top-0 left-0 w-1 h-full bg-violet rounded-r-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_10px_#8b5cf6]" />
             <span className="text-[2rem] mb-3 block">⚔️</span>
             <div className="font-display text-base font-bold tracking-tight text-text mb-1.5">Quick Match</div>
             <div className="text-muted text-sm leading-relaxed mb-4">
@@ -123,7 +123,7 @@ export default function Landing() {
           <p className="text-muted text-base mb-10">Win matches to gain Elo. You'll only be matched within your arena.</p>
           <div className="flex flex-wrap justify-center gap-3">
             {arenas.map(a => (
-              <div key={a.name} className="flex items-center gap-2.5 bg-surface border border-border rounded-full px-5 py-2.5 transition-all duration-200 hover:border-text2/20 hover:bg-surface2">
+              <div key={a.name} className="flex items-center gap-2.5 bg-surface/80 backdrop-blur border border-border rounded-full px-5 py-2.5 transition-all duration-300 hover:border-text2/30 hover:bg-surface2 hover:scale-[1.03] hover:shadow-md cursor-default">
                 <div className={`w-2.5 h-2.5 rounded-full ${a.color}`} />
                 <span className="text-sm font-semibold text-text">{a.name}</span>
                 <span className="text-xs text-muted font-mono">{a.req}</span>

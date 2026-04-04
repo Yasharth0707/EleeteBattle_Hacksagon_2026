@@ -5,7 +5,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="flex items-center justify-between px-8 h-14 border-b border-border bg-bg/90 backdrop-blur-md sticky top-0 z-[100]">
+    <nav className="flex items-center justify-between px-8 h-14 border-b border-white/5 bg-bg/70 backdrop-blur-xl sticky top-0 z-[100] shadow-sm">
 <Link to="/" className="flex items-center gap-2 no-underline hover:opacity-80 transition-opacity">
   <img src="/logo.png" alt="EleeteBattle Logo" className="h-12 w-auto object-contain scale-[1.5] origin-left" />
 </Link>

@@ -27,7 +27,7 @@ export default {
         text: '#ececf1',
         text2: '#a1a1aa',
         muted: '#63636e',
-        // Legacy aliases for compatibility
+        // Legacy aliases
         cyan: '#ff6b35',
         'cyan-dim': '#cc5229',
         magenta: '#8b5cf6',
@@ -43,10 +43,17 @@ export default {
         body: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
       },
+      boxShadow: {
+        'glow-ember': '0 0 20px -5px rgba(255, 107, 53, 0.4)',
+        'glow-violet': '0 0 20px -5px rgba(139, 92, 246, 0.4)',
+        'glass-inset': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.05)',
+        'card-hover': '0 10px 40px -10px rgba(0,0,0,0.5)',
+      },
       borderRadius: {
         sm: '6px',
         md: '10px',
         lg: '16px',
+        xl: '24px',
       },
       keyframes: {
         slideUp: {
@@ -89,6 +96,10 @@ export default {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-6px)' },
         },
+        floatSlow: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
@@ -114,6 +125,7 @@ export default {
         shake: 'shake 0.3s ease',
         spin: 'spin 0.8s linear infinite',
         float: 'float 3s ease-in-out infinite',
+        floatSlow: 'floatSlow 6s ease-in-out infinite',
         shimmer: 'shimmer 2s linear infinite',
         ringPulse: 'ringPulse 2s ease-out infinite',
         borderGlow: 'borderGlow 3s ease infinite',

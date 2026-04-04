@@ -32,13 +32,46 @@ export default function Battle() {
   const [cookieCsrf, setCookieCsrf] = useState('');
   const [showAuthNeed, setShowAuthNeed] = useState(false);
 
+  // ─── Anti-cheat: tab-switch tracking ───────────────────────────
+  const [tabWarning, setTabWarning] = useState(false);   // show yellow banner
+  const tabSwitchCount = useRef(0);
+
   const editorRef = useRef(null);
   const timerRef = useRef(null);
   const langRef = useRef(language);
   const codeRef = useRef(code);
 
+  // cookies are ready when both keys exist in localStorage
+  // useState so it updates immediately when saveSettings() is called mid-match
+  const [cookiesReady, setCookiesReady] = useState(
+    !!(localStorage.getItem('lc_session') && localStorage.getItem('lc_csrf'))
+  );
+
   useEffect(() => { langRef.current = language; }, [language]);
   useEffect(() => { codeRef.current = code; }, [code]);
+
+  // ─── Tab-switch anti-cheat ──────────────────────────────────────
+  useEffect(() => {
+    if (!cookiesReady || gameOver) return;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        tabSwitchCount.current += 1;
+
+        if (tabSwitchCount.current === 1) {
+          // First switch — warn only
+          setTabWarning(true);
+        } else if (tabSwitchCount.current >= 2) {
+          // Second switch — forfeit
+          setTabWarning(false);
+          if (socket) socket.emit('leave-match');
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [cookiesReady, gameOver, socket]);
 
   // ─── Fetch Problem ──────────────────────────────────────────────
   useEffect(() => {
@@ -141,7 +174,7 @@ export default function Battle() {
     }
   };
 
-  // ─── Submit (Finish) ───────────────────────────────
+  // ─── Submit (Finish / i-finished) ───────────────────────────────
   const handleSubmit = async () => {
     if (!token) {
       setShowAuthNeed(true);
@@ -231,6 +264,10 @@ export default function Battle() {
     localStorage.setItem('lc_session', cookieSession.trim());
     localStorage.setItem('lc_csrf', cookieCsrf.trim());
     setShowSettings(false);
+    // unlock editor immediately after saving
+    if (cookieSession.trim() && cookieCsrf.trim()) {
+      setCookiesReady(true);
+    }
   };
 
   // ─── Language Change ────────────────────────────────────────────
@@ -263,7 +300,9 @@ export default function Battle() {
       {/* Top Bar */}
       <div className="h-11 bg-surface border-b border-border flex items-center justify-between px-4 flex-shrink-0 z-10">
         <div className="flex items-center gap-3">
-  <img src="/logo.png" alt="EleeteBattle Logo" className="h-6 w-auto object-contain" />
+          <span className="font-display text-sm font-bold tracking-tight text-ember">
+            EleeteBattle
+          </span>
           <div className="w-px h-4 bg-border" />
           <span className="text-xs font-medium text-muted font-mono">Room {roomCode}</span>
         </div>
@@ -357,12 +396,12 @@ export default function Battle() {
           </div>
 
           {/* Code Editor */}
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 min-h-0 relative">
             <Editor
               height="100%"
               language={LANG_CONFIG[language]?.monaco || 'python'}
               value={code}
-              onChange={(val) => setCode(val || '')}
+              onChange={(val) => { if (cookiesReady) setCode(val || ''); }}
               onMount={handleEditorMount}
               theme="vs-dark"
               options={{
@@ -376,8 +415,62 @@ export default function Battle() {
                 tabSize: 4,
                 suggestOnTriggerCharacters: true,
                 quickSuggestions: true,
+                readOnly: !cookiesReady,
               }}
             />
+
+            {/* Lock overlay — shown when cookies not set */}
+            {!cookiesReady && (
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10"
+                style={{ background: 'rgba(12,12,15,0.82)', backdropFilter: 'blur(4px)' }}
+              >
+                <div style={{ fontSize: '2rem' }}>🔒</div>
+                <div style={{ color: '#ececf1', fontWeight: 700, fontSize: '0.95rem' }}>Editor Locked</div>
+                <div style={{ color: '#a1a1aa', fontSize: '0.8rem', textAlign: 'center', maxWidth: '260px', lineHeight: 1.5 }}>
+                  Sync your LeetCode cookies first to start coding.
+                </div>
+                <button
+                  onClick={() => { setCookieSession(localStorage.getItem('lc_session') || ''); setCookieCsrf(localStorage.getItem('lc_csrf') || ''); setShowSettings(true); }}
+                  style={{
+                    marginTop: '4px', padding: '8px 20px', borderRadius: '8px',
+                    background: '#ff6b35', color: '#fff', fontWeight: 700,
+                    fontSize: '0.82rem', border: 'none', cursor: 'pointer',
+                    boxShadow: '0 4px 16px rgba(255,107,53,0.3)',
+                  }}
+                >
+                  ⚙ Open Settings
+                </button>
+              </div>
+            )}
+
+            {/* Tab-switch warning banner — shown after first switch */}
+            {tabWarning && cookiesReady && (
+              <div
+                className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 py-2.5 z-20"
+                style={{
+                  background: 'rgba(245,158,11,0.12)',
+                  borderBottom: '1px solid rgba(245,158,11,0.35)',
+                  backdropFilter: 'blur(6px)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '1rem' }}>⚠️</span>
+                  <span style={{ color: '#f59e0b', fontWeight: 700, fontSize: '0.82rem' }}>
+                    Warning: Tab switch detected.
+                  </span>
+                  <span style={{ color: '#a1a1aa', fontSize: '0.78rem' }}>
+                    Switching tabs again will forfeit the match.
+                  </span>
+                </div>
+                <button
+                  onClick={() => setTabWarning(false)}
+                  style={{ background: 'none', border: 'none', color: '#63636e', cursor: 'pointer', fontSize: '1rem', lineHeight: 1 }}
+                >
+                  ✕
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Output Panel */}

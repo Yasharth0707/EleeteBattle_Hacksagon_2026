@@ -35,4 +35,3 @@ const CURATED_PROBLEMS = {
   ]
 };
 
-

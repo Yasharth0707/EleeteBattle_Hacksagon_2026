@@ -247,4 +247,159 @@ function initializeSocket(io, rooms) {
           } catch (err) {
             console.error('Failed to update ratings:', err);
             notifyGameOver();
-            
+          }
+        })();
+      } else {
+        recordUnratedMatches()
+          .then(() => notifyGameOver())
+          .catch((err) => {
+            console.error('Failed storing unrated history:', err);
+            notifyGameOver();
+          });
+      }
+    });
+
+    // ── Matchmaking Queue ────────────────────────────────────────────
+    socket.on('join-queue', ({ playerName, questionType, difficulty, problemUrl, token }) => {
+      let userId = null;
+      let rating = 1000;
+      if (token) {
+        try {
+          const decoded = jwt.verify(token, JWT_SECRET);
+          userId = decoded.id;
+          playerName = decoded.username;
+          rating = decoded.rating || 1000;
+        } catch (e) { /* ignore */ }
+      }
+
+      removeFromQueue(socket.id);
+
+      matchmakingQueue.push({
+        socketId: socket.id,
+        userId,
+        playerName: playerName || 'Player',
+        rating,
+        questionType: questionType || 'random',
+        difficulty: difficulty || 'easy',
+        problemUrl: problemUrl || null,
+        joinedAt: Date.now()
+      });
+
+      console.log(`🔍 ${playerName} joined matchmaking queue (${questionType}, ${difficulty || 'n/a'}). Queue size: ${matchmakingQueue.length}`);
+
+      // Send queue status to everyone in queue
+      matchmakingQueue.forEach(entry => {
+        const s = io.sockets.sockets.get(entry.socketId);
+        if (s) {
+          s.emit('queue-status', {
+            position: matchmakingQueue.indexOf(entry) + 1,
+            total: matchmakingQueue.length
+          });
+        }
+      });
+
+      tryMatchPlayers(io, rooms);
+    });
+
+    socket.on('leave-queue', () => {
+      removeFromQueue(socket.id);
+      console.log(`❌ Player left matchmaking queue. Queue size: ${matchmakingQueue.length}`);
+    });
+
+    // ── Leave Match ──────────────────────────────────────────────────
+    socket.on('leave-match', () => {
+      const code = socket.data.roomCode;
+      const room = rooms[code];
+      if (!room) return;
+
+      const playerName = room.players[socket.id]?.name;
+
+      if (!room.started) {
+        // Left lobby
+        delete room.players[socket.id];
+        const playerList = buildPlayerList(room);
+        io.to(code).emit('players-updated', playerList);
+        if (playerName) {
+          io.to(code).emit('player-left', { name: playerName });
+        }
+      } else if (!room.winner) {
+        // Forfeited match
+        let winnerId = null;
+        for (const sid of Object.keys(room.players)) {
+          if (sid !== socket.id) {
+            winnerId = sid;
+            break;
+          }
+        }
+        
+        if (winnerId) {
+          room.winner = winnerId;
+          const elapsed = Math.floor((Date.now() - room.startTime) / 1000);
+          io.to(code).emit('game-over', {
+            winnerId: winnerId,
+            loserId: socket.id,
+            winnerName: room.players[winnerId]?.name || 'Opponent',
+            elapsedSeconds: elapsed,
+            ratingChangeWinner: 0,
+            ratingChangeLoser: 0,
+            winnerNewRating: 1000,
+            loserNewRating: 1000,
+            isRated: false,
+            forfeit: true
+          });
+        }
+      }
+      
+      socket.leave(code);
+      socket.data.roomCode = null;
+    });
+
+    // ── Disconnect ───────────────────────────────────────────────────
+    socket.on('disconnect', () => {
+      removeFromQueue(socket.id);
+
+      const code = socket.data.roomCode;
+      const room = rooms[code];
+      if (!room) return;
+
+      if (room.started && !room.winner) {
+        // Disconnected mid-match -> Forfeit
+        let winnerId = null;
+        for (const sid of Object.keys(room.players)) {
+          if (sid !== socket.id) {
+            winnerId = sid;
+            break;
+          }
+        }
+        
+        if (winnerId) {
+          room.winner = winnerId;
+          const elapsed = Math.floor((Date.now() - room.startTime) / 1000);
+          io.to(code).emit('game-over', {
+            winnerId: winnerId,
+            loserId: socket.id,
+            winnerName: room.players[winnerId]?.name || 'Opponent',
+            elapsedSeconds: elapsed,
+            ratingChangeWinner: 0,
+            ratingChangeLoser: 0,
+            winnerNewRating: 1000,
+            loserNewRating: 1000,
+            isRated: false,
+            forfeit: true
+          });
+        }
+      }
+
+      const playerName = room.players[socket.id]?.name;
+      delete room.players[socket.id];
+
+      const playerList = buildPlayerList(room);
+      io.to(code).emit('players-updated', playerList);
+      if (playerName) {
+        io.to(code).emit('player-left', { name: playerName });
+      }
+    });
+  });
+}
+
+module.exports = { initializeSocket };

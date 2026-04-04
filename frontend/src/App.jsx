@@ -34,7 +34,7 @@ export default function App() {
             { <Route path="/battle" element={<Battle />} /> }
             { <Route path="/matchmaking" element={<Matchmaking />} /> }
             { <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> }
-            {/* <Route path="/leaderboard" element={<Leaderboard />} /> */}
+            { <Route path="/leaderboard" element={<Leaderboard />} /> }
           </Routes>
         </BrowserRouter>
       </SocketProvider>

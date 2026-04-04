@@ -99,3 +99,152 @@ function initializeSocket(io, rooms) {
         });
       }
     });
+    // ── I Finished ─────────────────────────────────────────────────
+    socket.on('i-finished', (payload) => {
+      const code = socket.data.roomCode;
+      const submissions = payload?.submissions || 1;
+      const room = rooms[code];
+      console.log(`[DEBUG] 'i-finished' received from socket ${socket.id} in room ${code}`);
+      if (!room) {
+        console.log(`[DEBUG] Room not found.`);
+        return;
+      }
+      if (!room.started) {
+        console.log(`[DEBUG] Room ${code} not started yet.`);
+        room.startTime = room.createdAt || Date.now();
+        room.started = true;
+      }
+      if (room.winner) {
+        console.log(`[DEBUG] Room ${code} already has a winner (${room.winner}).`);
+        return;
+      }
+
+      room.winner = socket.id;
+      const winnerPlayer = room.players[socket.id];
+      const winnerName = winnerPlayer?.name || 'Unknown';
+      const winnerUserId = winnerPlayer?.userId;
+      const elapsed = Math.floor((Date.now() - room.startTime) / 1000);
+
+      // Find loser
+      let loserId = null;
+      let loserUserId = null;
+      let loserName = 'Unknown';
+      for (const [sid, p] of Object.entries(room.players)) {
+        if (sid !== socket.id) {
+          loserId = sid;
+          loserUserId = p.userId;
+          loserName = p.name || 'Unknown';
+          break;
+        }
+      }
+
+      const notifyGameOver = (ratingChangeWinner = 0, ratingChangeLoser = 0, winnerNewRating = 1000, loserNewRating = 1000) => {
+        io.to(code).emit('game-over', {
+          winnerId: socket.id,
+          loserId,
+          winnerName,
+          elapsedSeconds: elapsed,
+          ratingChangeWinner,
+          ratingChangeLoser,
+          winnerNewRating,
+          loserNewRating,
+          isRated: !!(winnerUserId && loserUserId)
+        });
+      };
+
+      const recordUnratedMatches = async () => {
+        try {
+          const problemData = problemCache[room.problemSlug] || {};
+          const pTitle = problemData.title || room.problemSlug || 'Custom Problem';
+          const pDiff = problemData.difficulty || 'Medium';
+
+          if (winnerUserId) {
+            const rowW = await User.findById(winnerUserId);
+            if (rowW) {
+              rowW.matchHistory.push({
+                result: 'Win', ratingDelta: 0, newRating: rowW.rating,
+                opponentName: loserName, opponentRating: 0,
+                problemTitle: pTitle, problemSlug: room.problemSlug || '',
+                difficulty: pDiff, timeTaken: elapsed, submissions: submissions,
+                isRated: false, date: new Date()
+              });
+              await rowW.save();
+            }
+          }
+          if (loserUserId) {
+            const rowL = await User.findById(loserUserId);
+            if (rowL) {
+              rowL.matchHistory.push({
+                result: 'Loss', ratingDelta: 0, newRating: rowL.rating,
+                opponentName: winnerName, opponentRating: 0,
+                problemTitle: pTitle, problemSlug: room.problemSlug || '',
+                difficulty: pDiff, timeTaken: elapsed, submissions: 0,
+                isRated: false, date: new Date()
+              });
+              await rowL.save();
+            }
+          }
+        } catch (err) {
+          console.error('Failed storing unrated history:', err);
+        }
+      };
+
+      if (winnerUserId && loserUserId) {
+        // dono registered user hai → Rated match
+        (async () => {
+          try {
+            const rowW = await User.findById(winnerUserId);
+            const rowL = await User.findById(loserUserId);
+            if (!rowW || !rowL) {
+              await recordUnratedMatches();
+              return notifyGameOver();
+            }
+
+            const ratingW = rowW.rating;
+            const ratingL = rowL.rating;
+
+            const pSlug = room.problemSlug;
+            const diffMap = { 'Easy': 'Easy', 'Medium': 'Medium', 'Hard': 'Hard' };
+            let diffStr = 'Medium';
+            let problemTitle = pSlug || 'Custom Problem';
+            if (pSlug && problemCache[pSlug]) {
+              diffStr = diffMap[problemCache[pSlug].difficulty] || 'Medium';
+              problemTitle = problemCache[pSlug].title || problemTitle;
+            }
+
+            const resRating = calculateLogicalRating(ratingW, ratingL, diffStr, elapsed, submissions);
+            const newRatingW = resRating.newRatingW;
+            const newRatingL = resRating.newRatingL;
+
+            const changeW = newRatingW - ratingW;
+            const changeL = newRatingL - ratingL;
+
+            rowW.rating = newRatingW;
+            rowW.wins += 1;
+            rowW.ratingHistory.push({ rating: newRatingW });
+            rowW.matchHistory.push({
+              result: 'Win', ratingDelta: changeW, newRating: newRatingW,
+              opponentName: rowL.username, opponentRating: ratingL,
+              problemTitle: problemTitle, problemSlug: pSlug || '',
+              difficulty: diffStr, timeTaken: elapsed, submissions: submissions,
+              isRated: true, date: new Date()
+            });
+            await rowW.save();
+
+            rowL.rating = newRatingL;
+            rowL.losses += 1;
+            rowL.ratingHistory.push({ rating: newRatingL });
+            rowL.matchHistory.push({
+              result: 'Loss', ratingDelta: changeL, newRating: newRatingL,
+              opponentName: rowW.username, opponentRating: ratingW,
+              problemTitle: problemTitle, problemSlug: pSlug || '',
+              difficulty: diffStr, timeTaken: elapsed, submissions: 0,
+              isRated: true, date: new Date()
+            });
+            await rowL.save();
+
+            notifyGameOver(changeW, changeL, newRatingW, newRatingL);
+          } catch (err) {
+            console.error('Failed to update ratings:', err);
+            notifyGameOver();
+            

@@ -31,9 +31,9 @@ export default function Leaderboard() {
             <p className="text-muted text-sm">Top players ranked by Elo rating</p>
           </div>
           
-          <div className="bg-surface border border-border rounded-lg overflow-hidden">
+          <div className="bg-surface/70 backdrop-blur-xl shadow-glass-inset border border-white/5 shadow-2xl rounded-lg overflow-hidden">
             {/* Header */}
-            <div className="grid grid-cols-[60px_1fr_100px_80px] px-4 py-3 border-b border-border bg-surface2/50 text-xs font-medium text-muted uppercase tracking-wider">
+            <div className="grid grid-cols-[60px_1fr_100px_80px] px-4 py-3 border-b border-border/50 bg-surface2/30 backdrop-blur-sm text-xs font-medium text-muted uppercase tracking-wider">
               <div className="text-center">Rank</div>
               <div>Player</div>
               <div className="text-right">Rating</div>

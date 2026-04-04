@@ -74,7 +74,7 @@ export default function Room() {
       <ParticleBackground />
       <Navbar />
       <main className="flex-1 flex items-center justify-center p-8 relative z-[1]">
-        <div className="bg-surface border border-border rounded-lg p-8 w-full max-w-[460px] animate-cardEntry text-center">
+        <div className="bg-surface/70 backdrop-blur-xl shadow-glass-inset border border-white/5 shadow-2xl rounded-lg p-8 w-full max-w-[460px] animate-cardEntry text-center">
           <div className="inline-flex items-center gap-2 bg-mint/[0.08] border border-mint/[0.12] rounded-full px-3 py-1 text-xs font-semibold text-mint mb-5 tracking-wide">
             <div className="w-1.5 h-1.5 bg-mint rounded-full animate-blink" />
             Waiting Room
@@ -114,7 +114,7 @@ export default function Room() {
           {error && <div className="bg-flame/[0.08] border border-flame/20 rounded-md text-flame p-2.5 text-sm mb-4 animate-shake">{error}</div>}
 
           <button onClick={handleReady}
-            className="w-full py-3 px-6 bg-ember hover:bg-ember-glow text-white font-semibold rounded-md border-none cursor-pointer shadow-[0_4px_16px_rgba(255,107,53,0.2)] hover:translate-y-[-1px] transition-all duration-200 text-sm">
+            className="w-full py-3 px-6 bg-ember hover:bg-ember-glow text-white font-semibold rounded-md border-none cursor-pointer shadow-glow-ember hover:translate-y-[-1px] transition-all duration-300 hover:shadow-[0_4px_24px_rgba(255,107,53,0.5)] text-sm">
             ⚔️ Ready Up
           </button>
 

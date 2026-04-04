@@ -4,6 +4,7 @@ import Editor from '@monaco-editor/react';
 import { useSocket } from '../hooks/useSocket';
 import { useAuth } from '../hooks/useAuth';
 import GameOverOverlay from '../components/GameOverOverlay';
+import ParticleBackground from '../components/ParticleBackground';
 import { LANG_CONFIG, formatTime } from '../lib/utils';
 
 export default function Battle() {
@@ -296,9 +297,10 @@ export default function Battle() {
   const timeLeft = Math.max(0, maxTime - timer);
 
   return (
-    <div className="h-screen flex flex-col bg-bg overflow-hidden">
+    <div className="h-screen flex flex-col bg-bg overflow-hidden relative">
+      <ParticleBackground />
       {/* Top Bar */}
-      <div className="h-11 bg-surface border-b border-border flex items-center justify-between px-4 flex-shrink-0 z-10">
+      <div className="h-11 bg-surface/70 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4 flex-shrink-0 z-10 shadow-sm relative">
         <div className="flex items-center gap-3">
           <span className="font-display text-sm font-bold tracking-tight text-ember">
             EleeteBattle
@@ -339,9 +341,9 @@ export default function Battle() {
       </div>
 
       {/* Main Area */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative z-10">
         {/* Problem Panel */}
-        <div className="w-[400px] max-[768px]:hidden border-r border-border overflow-y-auto flex-shrink-0 bg-surface/50 p-6">
+        <div className="w-[400px] max-[768px]:hidden border-r border-white/5 overflow-y-auto flex-shrink-0 bg-surface/60 backdrop-blur-md p-6 shadow-glass-inset">
           {problemLoading ? (
             <div className="flex flex-col items-center justify-center h-full gap-3 text-muted">
               <div className="w-8 h-8 border-2 border-border border-t-ember rounded-full animate-spin" />
@@ -372,9 +374,9 @@ export default function Battle() {
         </div>
 
         {/* Editor Area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 bg-transparent">
           {/* Toolbar */}
-          <div className="h-10 bg-surface border-b border-border flex items-center px-3 gap-2 flex-shrink-0">
+          <div className="h-10 bg-surface/90 backdrop-blur-md border-b border-white/5 flex items-center px-3 gap-2 flex-shrink-0 shadow-glass-inset">
             <select value={language} onChange={e => handleLangChange(e.target.value)}
               className="bg-surface2 border border-border text-text text-xs font-mono rounded-md py-1 px-2 outline-none cursor-pointer hover:border-ember/30 transition-all">
               {Object.entries(LANG_CONFIG).map(([key, cfg]) => (
@@ -386,11 +388,11 @@ export default function Battle() {
               ↩ Reset
             </button>
             <button onClick={handleRun} disabled={running}
-              className="text-mint text-xs bg-mint/[0.06] border border-mint/15 rounded-md py-1 px-3 cursor-pointer font-medium hover:bg-mint/[0.12] transition-all disabled:opacity-50">
+              className="text-mint text-xs bg-mint/[0.06] border border-mint/15 rounded-md py-1 px-3 cursor-pointer font-medium hover:bg-mint/[0.12] transition-all disabled:opacity-50 hover:shadow-[0_0_12px_rgba(52,211,153,0.3)]">
               {running ? 'Running...' : '▶ Run'}
             </button>
             <button onClick={handleSubmit} disabled={submitting || !!gameOver}
-              className="text-white text-xs bg-ember hover:bg-ember-glow border-none rounded-md py-1 px-3 cursor-pointer font-semibold shadow-[0_2px_8px_rgba(255,107,53,0.2)] transition-all disabled:opacity-50">
+              className="text-white text-xs bg-ember hover:bg-ember-glow border-none rounded-md py-1 px-3 cursor-pointer font-semibold shadow-[0_2px_8px_rgba(255,107,53,0.2)] transition-all disabled:opacity-50 hover:shadow-glow-ember hover:-translate-y-[1px]">
               {submitting ? 'Submitting...' : '🏆 Submit'}
             </button>
           </div>
@@ -474,8 +476,8 @@ export default function Battle() {
           </div>
 
           {/* Output Panel */}
-          <div className="h-44 border-t border-border bg-surface/60 flex flex-col flex-shrink-0">
-            <div className="flex items-center border-b border-border">
+          <div className="h-44 border-t border-white/5 bg-surface/70 backdrop-blur-md flex flex-col flex-shrink-0 shadow-glass-inset">
+            <div className="flex items-center border-b border-white/5">
               <button onClick={() => setActiveTab('output')}
                 className={`px-4 py-2 text-xs font-medium border-none cursor-pointer transition-all ${activeTab === 'output' ? 'text-ember bg-ember/[0.05] border-b-2 border-b-ember' : 'text-muted bg-transparent hover:text-text2'}`}>
                 Output
@@ -503,7 +505,7 @@ export default function Battle() {
         </div>
 
         {/* Sidebar */}
-        <div className="w-[220px] max-[560px]:hidden border-l border-border bg-surface p-4 flex flex-col gap-4 overflow-y-auto flex-shrink-0">
+        <div className="w-[220px] max-[560px]:hidden border-l border-white/5 bg-surface/60 backdrop-blur-md p-4 flex flex-col gap-4 overflow-y-auto flex-shrink-0 shadow-glass-inset">
           <div className="text-xs font-medium uppercase tracking-wider text-muted">Problem</div>
           {problem && (
             <div className="bg-surface2 border border-border rounded-md p-2.5 text-xs leading-relaxed break-all">
@@ -525,9 +527,9 @@ export default function Battle() {
 
       {/* Settings Modal */}
       {showSettings && (
-        <div className="fixed inset-0 bg-bg/90 backdrop-blur-lg flex items-center justify-center z-[1000] animate-fadeIn">
-          <div className="relative bg-surface border border-border rounded-lg p-7 w-full max-w-[420px] shadow-[0_24px_64px_rgba(0,0,0,0.6)] animate-popIn text-left">
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ember/60 to-ember/10 rounded-t-lg" />
+        <div className="fixed inset-0 bg-bg/80 backdrop-blur-xl flex items-center justify-center z-[1000] animate-fadeIn">
+          <div className="relative bg-surface/80 backdrop-blur-xl border border-white/5 rounded-lg p-7 w-full max-w-[420px] shadow-2xl animate-popIn text-left shadow-glass-inset">
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ember/80 to-ember/20 rounded-t-lg" />
             <div className="flex justify-between items-center mb-3">
               <h2 className="font-display text-lg font-bold text-text">LeetCode Settings</h2>
               <button onClick={() => setShowSettings(false)} className="bg-transparent border-none text-muted cursor-pointer text-lg hover:text-text transition-colors">✕</button>
@@ -556,9 +558,9 @@ export default function Battle() {
 
       {/* Auth Need Modal */}
       {showAuthNeed && (
-        <div className="fixed inset-0 bg-bg/90 backdrop-blur-lg flex items-center justify-center z-[1000] animate-fadeIn">
-          <div className="relative bg-surface border border-border rounded-lg p-8 w-full max-w-[380px] shadow-[0_24px_64px_rgba(0,0,0,0.6)] animate-popIn text-center flex flex-col items-center">
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ember/60 to-ember/10 rounded-t-lg" />
+        <div className="fixed inset-0 bg-bg/80 backdrop-blur-xl flex items-center justify-center z-[1000] animate-fadeIn">
+          <div className="relative bg-surface/80 backdrop-blur-xl border border-white/5 rounded-lg p-8 w-full max-w-[380px] shadow-2xl animate-popIn text-center flex flex-col items-center shadow-glass-inset">
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ember/80 to-ember/20 rounded-t-lg" />
             <div className="text-3xl mb-3 mt-1">🔒</div>
             <h2 className="font-display text-lg font-bold text-text mb-2">Sign in required</h2>
             <p className="text-text2 text-sm mb-6 leading-relaxed">

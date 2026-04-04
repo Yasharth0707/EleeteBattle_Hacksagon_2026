@@ -36,7 +36,7 @@ export default function Login() {
       <Navbar />
       <main className="flex-1 flex items-center justify-center p-8 relative z-[1]">
         <div className="max-w-[380px] w-full animate-cardEntry">
-          <div className="bg-surface border border-border rounded-lg p-8">
+          <div className="bg-surface/70 backdrop-blur-xl shadow-glass-inset border border-white/5 shadow-2xl rounded-lg p-8">
             <h2 className="font-display text-xl font-bold text-text mb-1 tracking-tight">Welcome back</h2>
             <p className="text-muted text-sm mb-6">Log in to your account to continue</p>
             
@@ -45,13 +45,13 @@ export default function Login() {
             <form onSubmit={handleSubmit}>
               <label className="block text-xs font-medium text-text2 mb-1.5">Username</label>
               <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter your username" required autoComplete="username"
-                className="w-full p-2.5 mb-4 bg-surface2 border border-border rounded-md text-text text-sm transition-all duration-200 outline-none focus:border-ember/50 focus:ring-1 focus:ring-ember/20 placeholder:text-muted" />
+                className="w-full p-2.5 mb-4 bg-surface/50 border border-border rounded-md text-text text-sm transition-all duration-200 outline-none focus:border-ember/50 focus:ring-2 focus:ring-ember/20 focus:bg-surface2 placeholder:text-muted" />
               
               <label className="block text-xs font-medium text-text2 mb-1.5">Password</label>
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" required autoComplete="current-password"
-                className="w-full p-2.5 mb-5 bg-surface2 border border-border rounded-md text-text text-sm transition-all duration-200 outline-none focus:border-ember/50 focus:ring-1 focus:ring-ember/20 placeholder:text-muted" />
+                className="w-full p-2.5 mb-5 bg-surface/50 border border-border rounded-md text-text text-sm transition-all duration-200 outline-none focus:border-ember/50 focus:ring-2 focus:ring-ember/20 focus:bg-surface2 placeholder:text-muted" />
               
-              <button type="submit" className="w-full p-2.5 bg-ember hover:bg-ember-glow border-none rounded-md text-white font-semibold text-sm cursor-pointer transition-all duration-200 hover:translate-y-[-1px] hover:shadow-[0_4px_16px_rgba(255,107,53,0.3)]">
+              <button type="submit" className="w-full p-2.5 bg-ember hover:bg-ember-glow border-none rounded-md text-white font-semibold text-sm cursor-pointer shadow-glow-ember transition-all duration-300 hover:translate-y-[-1px] hover:shadow-[0_4px_24px_rgba(255,107,53,0.5)]">
                 Log in
               </button>
             </form>

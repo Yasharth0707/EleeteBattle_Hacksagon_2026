@@ -9,8 +9,8 @@ import Register from './pages/Register';
 
 // === COMMENTED OUT UNTIL BUILT (Phases 6/7/8) ===
 import Landing from './pages/Landing';
-// import Invite from './pages/Invite';
-// import Join from './pages/Join';
+ import Invite from './pages/Invite';
+ import Join from './pages/Join';
  import Room from './pages/Room';
  import Battle from './pages/Battle';
  import Matchmaking from './pages/Matchmaking';
@@ -28,8 +28,8 @@ export default function App() {
             
             {/* UNCOMMENT THESE AS YOU BUILD THEM */}
             { <Route path="/" element={<Landing />} /> }
-            {/* <Route path="/invite" element={<Invite />} /> */}
-            {/* <Route path="/join" element={<Join />} /> */}
+            { <Route path="/invite" element={<Invite />} /> }
+            { <Route path="/join" element={<Join />} /> }
             { <Route path="/room" element={<Room />} /> }
             { <Route path="/battle" element={<Battle />} /> }
             { <Route path="/matchmaking" element={<Matchmaking />} /> }

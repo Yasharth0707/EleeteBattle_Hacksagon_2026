@@ -1,4 +1,5 @@
 const { extractSlug, generateCode } = require('../utils/helpers');
+const { getArena } = require('./rating.service');
 const { fetchProblem, getRandomProblemSlug } = require('./leetcode.service');
 
 // ─── In-memory matchmaking queue ─────────────────────────────────────────────
@@ -26,12 +27,17 @@ async function tryMatchPlayers(io, rooms) {
       const p1 = matchmakingQueue[i];
       const p2 = matchmakingQueue[j];
 
+      const arena1 = getArena(p1.rating || 1000);
+      const arena2 = getArena(p2.rating || 1000);
+
       let isMatch = false;
 
-      if (p1.questionType === 'random' && p2.questionType === 'random' && p1.difficulty === p2.difficulty) {
-        isMatch = true;
-      } else if (p1.questionType === 'manual' && p2.questionType === 'manual' && p1.problemUrl === p2.problemUrl) {
-        isMatch = true;
+      if (arena1 === arena2) {
+        if (p1.questionType === 'random' && p2.questionType === 'random' && p1.difficulty === p2.difficulty) {
+          isMatch = true;
+        } else if (p1.questionType === 'manual' && p2.questionType === 'manual' && p1.problemUrl === p2.problemUrl) {
+          isMatch = true;
+        }
       }
 
       if (isMatch) {

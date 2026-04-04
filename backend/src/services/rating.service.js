@@ -4,11 +4,12 @@
 function calculateLogicalRating(ratingW, ratingL, diffStr, elapsedSec, submissions) {
   let basePoints = 30;
 
-  // Difficulty Multiplier
+  // Rank Context Matrix
   let diffMult = 1.0;
-  if (diffStr === 'Easy') diffMult = 0.8;
-  else if (diffStr === 'Medium') diffMult = 1.2;
-  else if (diffStr === 'Hard') diffMult = 1.5;
+  if (ratingW < 1200) { diffMult = (diffStr === 'Easy') ? 1.0 : (diffStr === 'Medium') ? 1.5 : 2.0; }
+  else if (ratingW < 1500) { diffMult = (diffStr === 'Easy') ? 0.8 : (diffStr === 'Medium') ? 1.2 : 1.5; }
+  else if (ratingW < 1800) { diffMult = (diffStr === 'Easy') ? 0.3 : (diffStr === 'Medium') ? 1.0 : 1.3; }
+  else { diffMult = (diffStr === 'Easy') ? 0.05 : (diffStr === 'Medium') ? 0.5 : 1.0; }
 
   let points = basePoints * diffMult;
 
@@ -48,6 +49,19 @@ function calculateLogicalRating(ratingW, ratingL, diffStr, elapsedSec, submissio
   return { newRatingW, newRatingL };
 }
 
+/**
+ * Get the arena name based on Elo rating.
+ */
+function getArena(rating) {
+  if (rating < 1400) return 'Bronze Arena';
+  if (rating < 1800) return 'Silver Arena';
+  if (rating < 2200) return 'Gold Arena';
+  if (rating < 2600) return 'Diamond Arena';
+  if (rating < 3000) return 'Master Arena';
+  return 'Grand Champion';
+}
+
 module.exports = {
   calculateLogicalRating,
+  getArena,
 };

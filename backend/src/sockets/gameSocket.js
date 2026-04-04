@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/env');
 const { buildPlayerList } = require('../utils/helpers');
-const { calculateLogicalRating } = require('../services/rating.service');
+const { calculateLogicalRating, getArena } = require('../services/rating.service');
 const { problemCache } = require('../services/leetcode.service');
 const { matchmakingQueue, removeFromQueue, tryMatchPlayers } = require('../services/matchmaking.service');
 const User = require('../models/User');
@@ -99,6 +99,7 @@ function initializeSocket(io, rooms) {
         });
       }
     });
+
     // ── I Finished ─────────────────────────────────────────────────
     socket.on('i-finished', (payload) => {
       const code = socket.data.roomCode;
@@ -166,7 +167,7 @@ function initializeSocket(io, rooms) {
                 opponentName: loserName, opponentRating: 0,
                 problemTitle: pTitle, problemSlug: room.problemSlug || '',
                 difficulty: pDiff, timeTaken: elapsed, submissions: submissions,
-                isRated: false, date: new Date()
+                arena: getArena(rowW.rating), isRated: false, date: new Date()
               });
               await rowW.save();
             }
@@ -179,7 +180,7 @@ function initializeSocket(io, rooms) {
                 opponentName: winnerName, opponentRating: 0,
                 problemTitle: pTitle, problemSlug: room.problemSlug || '',
                 difficulty: pDiff, timeTaken: elapsed, submissions: 0,
-                isRated: false, date: new Date()
+                arena: getArena(rowL.rating), isRated: false, date: new Date()
               });
               await rowL.save();
             }
@@ -190,7 +191,7 @@ function initializeSocket(io, rooms) {
       };
 
       if (winnerUserId && loserUserId) {
-        // dono registered user hai → Rated match
+        // Both are registered → Rated match
         (async () => {
           try {
             const rowW = await User.findById(winnerUserId);
@@ -227,7 +228,7 @@ function initializeSocket(io, rooms) {
               opponentName: rowL.username, opponentRating: ratingL,
               problemTitle: problemTitle, problemSlug: pSlug || '',
               difficulty: diffStr, timeTaken: elapsed, submissions: submissions,
-              isRated: true, date: new Date()
+              arena: getArena(ratingW), isRated: true, date: new Date()
             });
             await rowW.save();
 
@@ -239,7 +240,7 @@ function initializeSocket(io, rooms) {
               opponentName: rowW.username, opponentRating: ratingW,
               problemTitle: problemTitle, problemSlug: pSlug || '',
               difficulty: diffStr, timeTaken: elapsed, submissions: 0,
-              isRated: true, date: new Date()
+              arena: getArena(ratingL), isRated: true, date: new Date()
             });
             await rowL.save();
 
@@ -250,12 +251,11 @@ function initializeSocket(io, rooms) {
           }
         })();
       } else {
-        recordUnratedMatches()
-          .then(() => notifyGameOver())
-          .catch((err) => {
-            console.error('Failed storing unrated history:', err);
-            notifyGameOver();
-          });
+        // Unrated match
+        (async () => {
+          await recordUnratedMatches();
+          notifyGameOver();
+        })();
       }
     });
 

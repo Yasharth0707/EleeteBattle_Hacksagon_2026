@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>EleeteBattle Sync</title>
+  <style>
+    body {
+      background: #0d0d1a;
+      color: #00ffcc;
+      font-family: 'Courier New', Courier, monospace;
+      width: 250px;
+      padding: 15px;
+      margin: 0;
+      text-align: center;
+      border: 1px solid #ff00ff;
+    }
+    h2 {
+      margin-top: 5px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px #00ffcc;
+    }
+    .btn {
+      background: rgba(255, 0, 255, 0.2);
+      border: 1px solid #ff00ff;
+      color: #fff;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      width: 100%;
+      box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+    }
+    .btn:hover {
+      background: #ff00ff;
+      color: #000;
+      box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+    }
+    #status {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #ff3366;
+    }
+    .success {
+      color: #00ff00 !important;
+    }
+  </style>
+</head>
+<body>
+  <h2>Eleete Sync</h2>
+  <p style="font-size: 12px; color: #aaa;">Sync LeetCode cookies to your current EleeteBattle session.</p>
+  <button class="btn" id="syncBtn">⚡ SYNC NOW ⚡</button>
+  <div id="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

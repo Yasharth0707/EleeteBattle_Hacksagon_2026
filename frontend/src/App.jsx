@@ -27,7 +27,7 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             
             {/* UNCOMMENT THESE AS YOU BUILD THEM */}
-            {/* <Route path="/" element={<Landing />} /> */}
+            { <Route path="/" element={<Landing />} /> }
             {/* <Route path="/invite" element={<Invite />} /> */}
             {/* <Route path="/join" element={<Join />} /> */}
             {/* <Route path="/room" element={<Room />} /> */}

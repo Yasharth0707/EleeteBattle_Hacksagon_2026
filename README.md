@@ -135,7 +135,7 @@ cd EleeteBattle_Hacksagon_2026
    *Note: Replace `<username>`, `<password>`, and `your-db-name` with your actual MongoDB credentials.*
 4. Start the backend server:
    ```bash
-   npm run dev
+   node server.js
    ```
    You should see success messages in your terminal indicating it successfully connected to MongoDB and the server is running on port 3000.
 

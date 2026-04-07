@@ -11,6 +11,6 @@
     "postinstall": "npm run install:backend && npm run install:frontend && npm run build:frontend"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }

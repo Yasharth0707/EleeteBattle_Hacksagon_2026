@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('http');
+const path = require('path');
 const cors = require('cors');
 const { Server } = require('socket.io');
 
@@ -34,6 +35,13 @@ app.use('/api', problemRoutes);
 app.use('/api', leaderboardRoutes);
 app.use('/api', executionRoutes);
 app.use('/', roomRoutes);
+
+// ─── Serve Frontend (Production) ─────────────────────────────────────────────
+const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
+app.use(express.static(frontendDist));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'));
+});
 
 // ─── Socket.io ───────────────────────────────────────────────────────────────
 initializeSocket(io, rooms);
